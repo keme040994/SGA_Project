@@ -10,8 +10,8 @@ import pydotplus as pydot
 #   GUI
 # =======
 
-# FUNCTION: show_matrix_gui
-def show_matrix_gui(di_graph, name):
+# FUNCTION: create_composite_model_image
+def create_composite_model_image(di_graph, name):
     """
     Using a networkx's DAG (created based on the composite model), this function creates an image of the result of
     the Simple Genetic Algorithm using 'pydotplus' library.
@@ -43,3 +43,10 @@ def show_matrix_gui(di_graph, name):
                                               label=str(di_graph[edge[0]][edge[1]]['weight']),
                                               color="red"))
     display_graph.write_png("../" + name + ".png")
+
+
+# FUNCTION: write_file
+def write_file(file_name, text):
+    file = open("../" + file_name + ".txt", "w")
+    file.write(text)
+    file.close()

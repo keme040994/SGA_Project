@@ -29,7 +29,6 @@ def repair_population(population):
         LIST[Chromosome()]
             A new list of chromosomes with fixed DAG (no cycles)
     """
-    number_repairing_calls = 0  #
     repaired_population = []
     for i in range(0, len(population)):
         # I)
@@ -47,15 +46,11 @@ def repair_population(population):
         # III)
         di_graph = convert_matrix_to_digraph(population[i].get_genes())
         while not find_most_repeated_cycles(di_graph) == []:
-
-            number_repairing_calls += 1  #
-
             most_repeated_cycles = find_most_repeated_cycles(di_graph)
             most_repeated_cycles.sort(key=lambda x: x[1], reverse=True)  # A sorting of the list, bigger ones first
             di_graph.remove_edge(most_repeated_cycles[0][0][0], most_repeated_cycles[0][0][1])
 
         repaired_population.append(Chromosome(convert_digraph_to_matrix(di_graph)))
-    print("Number of repairing calls: " + str(number_repairing_calls))  #
     return repaired_population
 
 

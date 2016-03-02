@@ -4,6 +4,10 @@
 
 # LIBRARIES
 from business_logic.chromosome import Chromosome
+from business_logic.general_functions import *
+from business_logic.mutation_functions import *
+from business_logic.repair_functions import *
+from business_logic.selection_functions import *
 from random import randint
 
 
@@ -11,8 +15,88 @@ from random import randint
 # INITIALIZATION FUNCTIONS
 # ========================
 
-# FUNCTION initial_population_creator
-def initial_population_creator(pop_size, cant_genes, per_ones):
+# FUNCTION: seed_population
+def seed_population(pop_size, cant_genes, per_ones, likelihood_function, rep):
+    part_a_percentage = [15, 30, 45, 60, 75, 90]
+    part_b_percentage = [60, 70, 80]
+
+    initial_population = []
+    initial_population.extend(population_creator(pop_size, cant_genes, per_ones))
+    initial_population = repair_population(initial_population)
+
+    likelihood_result_calculator(initial_population, likelihood_function, rep)
+    relative_likelihood_result_calculator(initial_population)
+    relative_likelihood_result_sorting(initial_population)
+
+    # Part A
+    for percentage in part_a_percentage:
+        unique_population = select_uniques_chromosomes(initial_population)
+
+        keep_percentage = (len(initial_population)*percentage)//100
+        complete_percentage = len(initial_population)-keep_percentage
+
+        if len(unique_population) >= keep_percentage:
+            new_population = unique_population[:keep_percentage]
+        else:
+            # there must be a fancier way to do this!
+            new_population = unique_population
+
+            index = 0
+            while len(new_population) < keep_percentage:
+                new_population.append(unique_population[index])
+                if index >= len(unique_population):
+                    index = 0
+                else:
+                    index += 1
+
+        new_population.extend(population_creator(complete_percentage, cant_genes, per_ones))
+
+        initial_population = new_population
+        initial_population = repair_population(initial_population)
+
+        likelihood_result_calculator(initial_population, likelihood_function, rep)
+        relative_likelihood_result_calculator(initial_population)
+        relative_likelihood_result_sorting(initial_population)
+
+    # Part B
+    for percentage in part_b_percentage:
+        unique_population = select_uniques_chromosomes(initial_population)
+
+        keep_percentage = (len(initial_population)*percentage)//100
+        complete_percentage = len(initial_population)-keep_percentage
+
+        if len(unique_population) >= keep_percentage:
+            new_population = unique_population[:keep_percentage]
+        else:
+            # there must be a fancier way to do this!
+            new_population = unique_population
+
+            index = 0
+            while len(new_population) < keep_percentage:
+                new_population.append(unique_population[index])
+                if index >= len(unique_population):
+                    index = 0
+                else:
+                    index += 1
+
+        aux_population = []
+        for i in range(0, complete_percentage):
+            random_index = randint(0, len(initial_population)-1)
+            aux_population.append(initial_population[random_index])
+        mutation_function(aux_population, 0.5, 3)  # this could be (more) aggressive!
+
+        initial_population = new_population
+        initial_population.extend(aux_population)
+        initial_population = repair_population(initial_population)
+
+        likelihood_result_calculator(initial_population, likelihood_function, rep)
+        relative_likelihood_result_calculator(initial_population)
+        relative_likelihood_result_sorting(initial_population)
+    return initial_population
+
+
+# FUNCTION population_creator
+def population_creator(pop_size, cant_genes, per_ones):
     """
     Returns a list of chromosomes, created by random methods.
 
@@ -28,10 +112,10 @@ def initial_population_creator(pop_size, cant_genes, per_ones):
         LIST[Chromosome(), Chromosome(), ...]
             A list filled with 'Chromosome' objects
     """
-    initial_population = []
+    population = []
     for i in range(0, pop_size):
-        initial_population.append(Chromosome(create_random_genes(cant_genes, per_ones)))
-    return initial_population
+        population.append(Chromosome(create_random_genes(cant_genes, per_ones)))
+    return population
 
 
 # FUNCTION: create_random_genes

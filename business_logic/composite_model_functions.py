@@ -12,10 +12,10 @@ import networkx as nx
 # COMPOSITE MODEL FUNCTIONS
 # =========================
 
-# FUNCTION: composite_model_calculator
-def composite_model_calculator(population, cant_genes):
+# FUNCTION: composite_model_creator
+def composite_model_creator(population, cant_genes):
     """
-    Calculates the composite model by multiplying every chromosome to its fitness and sum them all in a new matrix.
+    Creates the composite model by multiplying every chromosome to its fitness and sum them all in a new matrix.
 
     Args:
         population : LIST[Chromosome(), Chromosome(), ...]

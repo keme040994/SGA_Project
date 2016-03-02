@@ -27,19 +27,31 @@ def view_population(population):
 
 
 # FUNCTION: likelihood_result_calculator
-def likelihood_result_calculator(population, rep):
+def likelihood_result_calculator(population, likelihood_function, rep):
     """
     Given a population and the replicates, it adds the likelihood result to every chromosome.
 
     Args:
         population : LIST[Chromosome(), Chromosome(), ...]
             A list filled with 'Chromosome' objects
+        likelihood_function: INT
+            Indicates the likelihood function that is going to be used
+                1 = cotemporal, 2 = next_step_one, 3 = next_step_one_two
         rep : LIST[rep1, rep2, rep3, ...]
             A repN is a biological data used to calc the likelihood result
     """
-    for i in range(0, len(population)):
-        di_graph = convert_matrix_to_digraph(population[i].get_genes())
-        population[i].set_likelihood_result(pnml_cotemporal(di_graph, rep))
+    if likelihood_function == 1:
+        for i in range(0, len(population)):
+            di_graph = convert_matrix_to_digraph(population[i].get_genes())
+            population[i].set_likelihood_result(pnml_cotemporal(di_graph, rep))
+    elif likelihood_function == 2:
+        for i in range(0, len(population)):
+            di_graph = convert_matrix_to_digraph(population[i].get_genes())
+            population[i].set_likelihood_result(pnml_next_step_one(di_graph, rep))
+    elif likelihood_function == 3:
+        for i in range(0, len(population)):
+            di_graph = convert_matrix_to_digraph(population[i].get_genes())
+            population[i].set_likelihood_result(pnml_next_step_one_two(di_graph, rep))
 
 
 # FUNCTION: relative_likelihood_result_sorting
