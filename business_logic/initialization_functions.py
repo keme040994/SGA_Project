@@ -1,10 +1,8 @@
 # Created by: Dr. David John & Kenneth Meza.
 # Created at: January, 2016.
-# Updated at: February, 2016.
+# Updated at: March, 2016.
 
 # LIBRARIES
-from business_logic.chromosome import Chromosome
-from business_logic.general_functions import *
 from business_logic.mutation_functions import *
 from business_logic.repair_functions import *
 from business_logic.selection_functions import *
@@ -17,6 +15,36 @@ from random import randint
 
 # FUNCTION: seed_population
 def seed_population(pop_size, cant_genes, per_ones, likelihood_function, rep):
+    """
+    An algorithm to create a more diverse first population. Based on the following steps:
+        1) Randomly generate N DAGS (generate N DGs and then fix). Compute relative likelihoods for these N
+        2) From the N DAGS, keep top 15% (unique), complete the 85% randomly. Compute relative likelihoods
+        3) From the N DAGS, keep top 30% (unique), complete the 70% randomly. Compute relative likelihoods
+        4) From the N DAGS, keep top 45% (unique), complete the 55% randomly. Compute relative likelihoods
+        5) From the N DAGS, keep top 60% (unique), complete the 40% randomly. Compute relative likelihood
+        6) From the N DAGS, keep top 75% (unique), complete the 25% randomly. Compute relative likelihoods
+        7) From the N DAGS, keep top 90% (unique), complete the 10% randomly. Compute relative likelihoods
+        8) From the N DAGS, keep top 60% (unique), complete the 40% by selecting from the N DAGS and mutating
+        9) From the N DAGS, keep top 70% (unique), complete the 30% by selecting from the N DAGS and mutating
+        10) From the N DAGS, keep top 80% (unique), complete the 20% by selecting from the N DAGS and mutating
+
+    Args:
+        pop_size : INT
+            The desired population size
+        cant_genes : INT
+            The desired amount of genes for each chromosome
+        per_ones : INT
+            The percentage of ones based on matrix's size
+        likelihood_function : INT
+            A number representing the desired likelihood function to use:
+                1 = cotemporal, 2 = next_step_one, 3 = next_step_one_two, n = not valid type
+        rep : LIST[rep1, rep2, rep3, ...]
+            A repN is a biological data used to calc the likelihood result
+
+    Returns:
+        LIST[Chromosome(), Chromosome(), ...]
+            A list filled with 'Chromosome' objects
+    """
     part_a_percentage = [15, 30, 45, 60, 75, 90]
     part_b_percentage = [60, 70, 80]
 

@@ -73,6 +73,19 @@ def selection_function(population, per_elitism, selection_prop):
 
 # FUNCTION: calc_num_survivors
 def calc_num_survivors(len_population, per_elitism):
+    """
+    Calculates the number of chromosomes who are going to survive.
+
+    Args:
+        len_population : INT
+            A number that represents the size of the population
+        per_elitism : INT
+            The desired percentage of elitism
+
+    Returns:
+        INT
+            A number indicating the number of survivors
+    """
     num_survivors = (len_population*per_elitism)//100
     if num_survivors % 2 != 0:
         num_survivors += 1

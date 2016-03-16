@@ -1,17 +1,37 @@
 # Created by: Dr. David John & Kenneth Meza.
 # Created at: January, 2016.
-# Updated at: February, 2016.
+# Updated at: March, 2016.
 
 # LIBRARIES
 from business_logic.pnml_functions import *
-from math import sqrt
 import networkx as nx
 import numpy as np
+import sys
 
 
 # =================
 # GENERAL FUNCTIONS
 # =================
+
+# FUNCTION: filter_likelihood_selection
+def filter_likelihood_selection(num):
+    """
+    Stops the execution if the likelihood function type is not valid.
+
+    Args:
+        num : INT
+            A number representing the desired likelihood function to use:
+                1 = cotemporal, 2 = next_step_one, 3 = next_step_one_two, n = not valid type
+    """
+    if num == 1:
+        print("* LIKELIHOOD FUNCTION: Cotemporal")
+    elif num == 2:
+        print("* LIKELIHOOD FUNCTION: Next-Step One")
+    elif num == 3:
+        print("* LIKELIHOOD FUNCTION: Next-Step One-Two")
+    else:
+        sys.exit("ERROR: You need to select a valid likelihood function type.")
+
 
 # FUNCTION: view_population
 def view_population(population):
@@ -154,7 +174,7 @@ def transpose_matrix(matrix):
 
 
 # FUNCTION: extract_column
-def extract_column(matrix, column_number):  # column_number:
+def extract_column(matrix, column_number):
     """
     An auxiliary function that extracts a column given a matrix.
 
@@ -217,8 +237,66 @@ def find_element_on_list(relative_likelihood_result, unique_population):
     return True
 
 
+# FUNCTION: view_model
+def view_model(model, model_title):
+    """
+    Displays a model (composite or amalgamated) and all its content
+
+    Args:
+        model : MATRIX[[FLOAT, FLOAT, ...], [FLOAT, FLOAT, ...], ...]
+            A given model
+        model_title : STRING
+            A title to be putted on the displaying
+    """
+    print(model_title)
+    for row in model:
+        for val in row:
+            print("{:10.3f}".format(val), end="")
+        print()
+
+
+# FUNCTION: convert_model_to_digraph
+def convert_model_to_digraph(model, per_max_model, a_protein_names):
+    """
+    A special conversion function where given a model (composite or amalgamated) and the proteins names it combines all
+    in a new digraph that will contains the information necessary for displaying the graph.
+
+    Args:
+        model : MATRIX[[FLOAT, FLOAT, ...], [FLOAT, FLOAT, ...], ...]
+            A given model
+        per_max_model : FLOAT
+            A number used for filtering purpose
+        a_protein_names : LIST[STRING, STRING, STRING, ...]
+            The name of all the proteins given in the variable 'a_protein_names' on 'data_logic.data_input.py'
+
+    Returns:
+        nx.DiGraph()
+            The converted model into the true digraph format for displaying
+    """
+    cm_digraph = convert_matrix_to_digraph(model)
+    di_graph = nx.DiGraph()
+    di_graph.add_nodes_from(a_protein_names)
+    for i in range(0, len(cm_digraph.edges())):
+        edge = cm_digraph.edges()[i]
+        if cm_digraph[edge[0]][edge[1]]['weight'] >= per_max_model:
+            di_graph.add_edge(a_protein_names[edge[0]], a_protein_names[edge[1]],
+                              weight=cm_digraph[edge[0]][edge[1]]['weight'])
+    return di_graph
+
+
 # FUNCTION: fitness_average
 def fitness_average(population):
+    """
+    Given a population, it calculates the average of the fitness value.
+
+    Args:
+        population : LIST[Chromosome(), Chromosome(), ...]
+            A list filled with 'Chromosome' objects
+
+    Returns:
+        FLOAT
+            The average of the fitness value in the population
+    """
     fitness_avg = 0
     for item in population:
         fitness_avg += item.get_fitness()
@@ -227,6 +305,17 @@ def fitness_average(population):
 
 # FUNCTION: fitness_variance
 def fitness_variance(population):
+    """
+    Given a population, it calculates the variance of the fitness value.
+
+    Args:
+        population : LIST[Chromosome(), Chromosome(), ...]
+            A list filled with 'Chromosome' objects
+
+    Returns:
+        FLOAT
+            The variance of the fitness value in the population
+    """
     fitness_avg = fitness_average(population)
     fitness_var = 0
     for i in range(0, len(population)):
@@ -236,6 +325,17 @@ def fitness_variance(population):
 
 # FUNCTION: rlr_average
 def rlr_average(population):
+    """
+    Given a population, it calculates the average of the relative likelihood result.
+
+    Args:
+        population : LIST[Chromosome(), Chromosome(), ...]
+            A list filled with 'Chromosome' objects
+
+    Returns:
+        FLOAT
+            The average of the relative likelihood result in the population
+    """
     rlr_avg = 0
     for item in population:
         rlr_avg += item.get_relative_likelihood_result()
@@ -244,8 +344,40 @@ def rlr_average(population):
 
 # FUNCTION: rlr_variance
 def rlr_variance(population):
+    """
+    Given a population, it calculates the variance of the relative likelihood result.
+
+    Args:
+        population : LIST[Chromosome(), Chromosome(), ...]
+            A list filled with 'Chromosome' objects
+
+    Returns:
+        FLOAT
+            The variance of the relative likelihood result in the population
+    """
     rlr_avg = rlr_average(population)
     rlr_var = 0
     for i in range(0, len(population)):
         rlr_var += (population[i].get_relative_likelihood_result()-rlr_avg)**2
     return rlr_var/len(population)
+
+
+# FUNCTION: sum_matrix
+def sum_matrix(matrix_a, matrix_b):
+    """
+    Sums two matrix.
+
+    Args:
+        matrix_a : MATRIX[[FLOAT, FLOAT, ...], [FLOAT, FLOAT, ...], ...]
+            A matrix to be summed
+        matrix_b : MATRIX[[FLOAT, FLOAT, ...], [FLOAT, FLOAT, ...], ...]
+            Another matrix to be summed
+
+    Returns:
+        MATRIX[[FLOAT, FLOAT, ...], [FLOAT, FLOAT, ...], ...]
+            The summed matrix in a new matrix
+    """
+    for i in range(0, len(matrix_a)):
+        for j in range(0, len(matrix_a)):
+            matrix_a[i][j] += matrix_b[i][j]
+    return matrix_a
