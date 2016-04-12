@@ -1,10 +1,11 @@
 # Created by: Dr. David John & Kenneth Meza.
 # Created at: January, 2016.
-# Updated at: January, 2016.
+# Updated at: April, 2016.
 
 # LIBRARIES
 from business_logic.chromosome import Chromosome
 from business_logic.general_functions import *
+from copy import deepcopy
 from random import randint
 import random
 
@@ -13,8 +14,8 @@ import random
 # SELECTION FUNCTIONS
 # ===================
 
-# FUNCTION: ranked_selection_calculator
-def ranked_selection_calculator(ordered_population):
+# FUNCTION: fitness_calculator
+def fitness_calculator(ordered_population):
     """
     Calculates the 'fitness' that will be used for doing a rank based selection.
 
@@ -28,34 +29,30 @@ def ranked_selection_calculator(ordered_population):
 
 
 # FUNCTION: selection_function
-def selection_function(population, per_elitism, selection_prop):
+def selection_function(population, num_survivors, selection_prop):
     """
     Creates the new generation of chromosomes by doing the crossover on every two parents. The elitism happens here.
 
     Args:
         population : LIST[Chromosome]
             A list filled with 'Chromosome' objects
-        per_elitism : INT
-            The desired percentage of elitism
+        num_survivors : INT
+            The number of survivors, based on pre-calculated data using the percentage of elitism
         selection_prop : FLOAT
             The desired probability of selection
     Returns:
         LIST[Chromosome]
             A list filled with 'Chromosome' objects, containing the new population
     """
-    new_population = []
     match_list = match_list_creator(population)
 
     # Elitism
-    num_survivors = calc_num_survivors(len(population), per_elitism)
     unique_population = select_uniques_chromosomes(population)
     if len(unique_population) > num_survivors:
-        for i in range(0, num_survivors):
-            new_population.append(unique_population[i])
+        new_population = unique_population[:num_survivors]
     else:
-        for i in range(0, len(unique_population)):
-            new_population.append(unique_population[i])
-        num_survivors -= unique_population
+        new_population = unique_population
+        num_survivors -= len(unique_population)
         if num_survivors % 2 != 0:
             num_survivors += 1
 
@@ -110,10 +107,10 @@ def crossover_function(parent_a, parent_b, selection_prop):
         TUPLE(Chromosome, Chromosome)
             A tuple formed by two offsprings, represented by a 'Chromosome' object
     """
-    genes_a = parent_a.get_genes()
-    genes_b = parent_b.get_genes()
+    genes_a = deepcopy(parent_a.get_genes())
+    genes_b = deepcopy(parent_b.get_genes())
     match_prop = random.random()
-    if match_prop < selection_prop:
+    if match_prop <= selection_prop:
         column_number = randint(0, len(genes_a)-1)
         for i in range(0, len(genes_a)):
             genes_a[i][column_number], genes_b[i][column_number] = genes_b[i][column_number], genes_a[i][column_number]

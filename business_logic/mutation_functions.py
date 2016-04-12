@@ -1,6 +1,6 @@
 # Created by: Dr. David John & Kenneth Meza.
 # Created at: January, 2016.
-# Updated at: February, 2016.
+# Updated at: April, 2016.
 
 # LIBRARIES
 from random import randint
@@ -31,6 +31,5 @@ def mutation_function(population, mutation_prob, cant_mutations):
                 random1 = randint(0, len(population[0].get_genes())-1)
                 random2 = randint(0, len(population[0].get_genes())-1)
                 while random1 == random2:  # for avoiding having two equal random numbers
-                    random1 = randint(0, len(population[0].get_genes())-1)
                     random2 = randint(0, len(population[0].get_genes())-1)
                 population[i].bit_changer(random1, random2)

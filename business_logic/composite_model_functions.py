@@ -4,6 +4,7 @@
 
 # LIBRARIES
 from business_logic.chromosome import Chromosome
+from business_logic.general_functions import *
 
 
 # =========================
@@ -13,7 +14,7 @@ from business_logic.chromosome import Chromosome
 # FUNCTION: composite_model_creator
 def composite_model_creator(population, cant_genes):
     """
-    Creates the composite model by multiplying every chromosome to its fitness and sum them all in a new matrix.
+    Creates the composite model by multiplying every chromosome to its fitness and summing them all in a new matrix.
 
     Args:
         population : LIST[Chromosome(), Chromosome(), ...]
@@ -33,26 +34,6 @@ def composite_model_creator(population, cant_genes):
             for k in range(0, len(genes)):
                 composite_model[j][k] += genes[j][k]
     return round_matrix(composite_model, 3)
-
-
-# FUNCTION: round_matrix
-def round_matrix(composite_model, cant_decimals):
-    """
-    Returns a composite model's matrix, where every element has being rounded by 3.
-
-    Args:
-        composite_model : MATRIX[[FLOAT, FLOAT, ...], [FLOAT, FLOAT, ...], ...]
-            A given composite model
-        cant_decimals : INT
-            The amount of decimals desired for the rounding
-
-    Returns:
-        A rounded composite model matrix
-    """
-    for i in range(0, len(composite_model)):
-        for j in range(0, len(composite_model)):
-            composite_model[i][j] = round(composite_model[i][j], cant_decimals)
-    return composite_model
 
 
 # FUNCTION: fitness_x_genes

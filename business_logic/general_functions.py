@@ -1,6 +1,6 @@
 # Created by: Dr. David John & Kenneth Meza.
 # Created at: January, 2016.
-# Updated at: March, 2016.
+# Updated at: April, 2016.
 
 # LIBRARIES
 from business_logic.pnml_functions import *
@@ -381,3 +381,24 @@ def sum_matrix(matrix_a, matrix_b):
         for j in range(0, len(matrix_a)):
             matrix_a[i][j] += matrix_b[i][j]
     return matrix_a
+
+
+# FUNCTION: round_matrix
+def round_matrix(matrix, cant_decimals):
+    """
+    Rounds out every element on a matrix, given an amount of decimals.
+
+    Args:
+        matrix : MATRIX[[FLOAT, FLOAT, ...], [FLOAT, FLOAT, ...], ...]
+            A given matrix
+            A given matrix
+        cant_decimals : INT
+            The amount of decimals desired for the rounding
+
+    Returns:
+        A rounded matrix
+    """
+    for i in range(0, len(matrix)):
+        for j in range(0, len(matrix)):
+            matrix[i][j] = round(matrix[i][j], cant_decimals)
+    return matrix

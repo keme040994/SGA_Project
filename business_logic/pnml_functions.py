@@ -26,8 +26,8 @@ def pnml_cotemporal(di_graph, rep):
     """
     # number of time points and number of replicates
     _t = np.shape(rep)[1]
-    _r = len(rep)
-
+    _r = len(rep
+    )
     # partition the nodes of G into two classes, those without (wo) parents and
     # those with at least one parent
     _VwoP = [_v for _v in nx.nodes(di_graph) if nx.ancestors(di_graph, _v) == set([])]

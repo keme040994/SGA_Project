@@ -1,6 +1,10 @@
 # Created by: Dr. David John & Kenneth Meza.
 # Created at: March, 2016.
-# Updated at: March, 2016.
+# Updated at: April, 2016.
+
+# LIBRARIES
+from business_logic.chromosome import Chromosome
+from business_logic.general_functions import *
 
 
 # ===========================
@@ -8,15 +12,16 @@
 # ===========================
 
 # FUNCTION: amalgamated_model_creator
-def amalgamated_model_creator(composite_models_generated, cant_genes):
+def amalgamated_model_creator(amalgamated_population, cant_genes):
     """
-    Creates the amalgamated model, taking a group of composite models and summing all the matrices
-    values into one new matrix, and dividing every value in the new matrix by the amount of composite
-    models summed.
+    Creates the amalgamated model by having an amalgamated population (every last chromosome of every last generation
+    of composite model creation), multiplying every chromosome to its relative likelihood result, summing them all in
+    a new matrix and dividing every element in the new matrix by the summed relative likelihood result.
+    Works for NextStep One and NextStep One-Two paradigms.
 
     Args:
-        composite_models_generated : LIST[Composite_Model, Composite_Model, ...]
-            A list containing composite models, represented in matrix of floats
+        amalgamated_population : LIST[Chromosome(), Chromosome(), ...]
+            A list filled with 'Chromosome' objects
         cant_genes : INT
             The amount of genes for each chromosome
 
@@ -25,11 +30,79 @@ def amalgamated_model_creator(composite_models_generated, cant_genes):
             The amalgamated model
     """
     amalgamated_model = [[0 for i in range(cant_genes)] for i in range(cant_genes)]
-    for composite_model in composite_models_generated:
+    amalgamated_population = relative_likelihood_result_x_genes(amalgamated_population)
+
+    # Calc of the summed relative likelihood results
+    summed_rlr = 0.0
+    for i in range(0, len(amalgamated_population)):
+        summed_rlr += amalgamated_population[i].get_relative_likelihood_result()
+
+    for chromosome in amalgamated_population:
+        genes = chromosome.get_genes()
         for i in range(0, cant_genes):
             for j in range(0, cant_genes):
-                amalgamated_model[i][j] += composite_model[i][j]
-    return element_divisor(amalgamated_model, len(composite_models_generated))
+                amalgamated_model[i][j] += genes[i][j]
+    return round_matrix(element_divisor(amalgamated_model, summed_rlr), 3)
+
+
+# FUNCTION: amalgamated_model_creator_cotemporal
+def amalgamated_model_creator_cotemporal(amalgamated_population, cant_genes):
+    """
+    Creates the amalgamated model by having an amalgamated population (every last chromosome of every last generation
+    of composite model creation), multiplying every chromosome to its relative likelihood result, summing them all in
+    a new matrix and dividing every element in the new matrix by the summed relative likelihood result.
+    Works for Cotemporal paradigm.
+
+    Args:
+        amalgamated_population : LIST[Chromosome(), Chromosome(), ...]
+            A list filled with 'Chromosome' objects
+        cant_genes : INT
+            The amount of genes for each chromosome
+
+    Returns:
+        MATRIX[[FLOAT, FLOAT, ...], [FLOAT, FLOAT, ...], ...]
+            The amalgamated model
+    """
+    amalgamated_model = [[0 for i in range(cant_genes)] for i in range(cant_genes)]
+    amalgamated_population = relative_likelihood_result_x_genes(amalgamated_population)
+
+    # Calc of the summed relative likelihood results
+    summed_rlr = 0.0
+    for i in range(0, len(amalgamated_population)):
+        summed_rlr += amalgamated_population[i].get_relative_likelihood_result()
+
+    for chromosome in amalgamated_population:
+        genes = chromosome.get_genes()
+        for i in range(0, cant_genes):
+            for j in range(0, cant_genes):
+                amalgamated_model[i][j] += genes[i][j] + genes[j][i]
+    return round_matrix(element_divisor(amalgamated_model, summed_rlr), 3)
+
+
+# FUNCTION: relative_likelihood_result_x_genes
+def relative_likelihood_result_x_genes(population):
+    """
+    This is an auxiliary function that multiplies the relative likelihood result by the genes on every chromosome of a
+    given population.
+
+    Args:
+        population : LIST[Chromosome(), Chromosome(), ...]
+            A list filled with 'Chromosome' objects
+
+    Returns:
+        LIST[Chromosome(), Chromosome(), ...]
+            The new population with the genes multiplied by the relative likelihood result
+    """
+    new_population = []
+    for i in range(0, len(population)):
+        genes = population[i].get_genes()
+        relative_likelihood_result = population[i].get_relative_likelihood_result()
+        for j in range(0, len(genes)):
+            for k in range(0, len(genes)):
+                genes[j][k] *= relative_likelihood_result
+        new_population.append(Chromosome(genes))
+        new_population[-1].set_relative_likelihood_result(relative_likelihood_result)
+    return new_population
 
 
 # FUNCTION: element_divisor
