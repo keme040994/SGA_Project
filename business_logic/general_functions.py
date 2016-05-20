@@ -396,7 +396,6 @@ def round_matrix(matrix, cant_decimals):
     Args:
         matrix : MATRIX[[FLOAT, FLOAT, ...], [FLOAT, FLOAT, ...], ...]
             A given matrix
-            A given matrix
         cant_decimals : INT
             The amount of decimals desired for the rounding
 
