@@ -32,7 +32,7 @@ For PyCharm users
 `pip3 install scipy`
 
 ##### Graphviz
-`sudo apt-get install graphviz`
+`sudo apt-get install graphviz`  
 `pip3 install pydotplus`
 
 _ _ _
