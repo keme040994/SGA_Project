@@ -12,14 +12,14 @@ Note:
 
 ## Libraries & Dependencies
 ##### OpenJDK
-For PyCharm users
+For PyCharm users  
 `sudo apt-get install openjdk-8-jre`
 
 ##### Pip 3
 `sudo apt-get install python3-pip`
 
 ##### BigFloat
-`sudo apt-get install libmpfr-dev`
+`sudo apt-get install libmpfr-dev`  
 `pip3 install bigfloat`
 
 ##### NetworkX
