@@ -12,7 +12,7 @@ import random
 # ==================
 
 # FUNCTION: mutation_function
-def mutation_function(population, mutation_prob, cant_mutations):
+def mutation_function(population, mutation_prob, num_mutations):
     """
     Given a probability of mutation, this function applies a mutation (change of a bit in the genes) to every
     chromosome in the population.
@@ -22,11 +22,11 @@ def mutation_function(population, mutation_prob, cant_mutations):
             A list filled with 'Chromosome' objects
         mutation_prob : FLOAT
             The desired probability of mutation
-        cant_mutations : INT
+        num_mutations : INT
             The desired amount of mutations per chromosome
     """
     for i in range(0, len(population)):
-        for j in range(0, cant_mutations):
+        for j in range(0, num_mutations):
             if random.random() <= mutation_prob:
                 random1 = randint(0, len(population[0].get_genes())-1)
                 random2 = randint(0, len(population[0].get_genes())-1)

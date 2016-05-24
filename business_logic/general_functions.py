@@ -389,14 +389,14 @@ def sum_matrix(matrix_a, matrix_b):
 
 
 # FUNCTION: round_matrix
-def round_matrix(matrix, cant_decimals):
+def round_matrix(matrix, num_decimals):
     """
     Rounds out every element on a matrix, given an amount of decimals.
 
     Args:
         matrix : MATRIX[[FLOAT, FLOAT, ...], [FLOAT, FLOAT, ...], ...]
             A given matrix
-        cant_decimals : INT
+        num_decimals : INT
             The amount of decimals desired for the rounding
 
     Returns:
@@ -404,5 +404,5 @@ def round_matrix(matrix, cant_decimals):
     """
     for i in range(0, len(matrix)):
         for j in range(0, len(matrix)):
-            matrix[i][j] = round(matrix[i][j], cant_decimals)
+            matrix[i][j] = round(matrix[i][j], num_decimals)
     return matrix
